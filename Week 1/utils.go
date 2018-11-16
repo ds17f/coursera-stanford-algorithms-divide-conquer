@@ -24,6 +24,11 @@ func leftPadString(str string, size int) string {
 	return fmt.Sprintf(formatStr, str)
 }
 
+func pow10str(n int) string {
+	formatStr := "%0" + strconv.Itoa(n) + "s"
+	return "1" + fmt.Sprintf(formatStr, "")
+}
+
 func getPlaces(n int) int {
 	if n == 0 {
 		return 1

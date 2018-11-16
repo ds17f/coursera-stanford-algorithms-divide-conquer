@@ -49,7 +49,7 @@ func _strSub(x string, y string) string {
 		//fmt.Printf("xi: %d, yi: %d\n", xi, yi)
 		offset := 0
 		// if x is bigger we need to add 10
-		if xi < yi {
+		if xi+carry < yi {
 			offset = 10
 		}
 
@@ -67,7 +67,6 @@ func _strSub(x string, y string) string {
 		//println(result)
 	}
 	return result
-
 }
 
 func strAdd(xa string, ya string) string {
@@ -122,7 +121,7 @@ func strAdd(xa string, ya string) string {
 		yi, _ := strconv.Atoi(string(y[i]))
 		//fmt.Printf("xi: %d, yi: %d\n", xi, yi)
 
-		sum := (xi * xNeg) + (yi * yNeg) + carry
+		sum := xi + yi + carry
 
 		carry = 0
 		if sum < 0 {
@@ -136,17 +135,25 @@ func strAdd(xa string, ya string) string {
 		result = strconv.Itoa(sum) + result
 		//println(result)
 	}
-	if xNeg*yNeg < 0 {
-		result = "-" + result
-	}
-	return result
+	return sign + result
 }
 
 func strSub(x string, y string) string {
-	xi := strToInt64(x)
-	yi := strToInt64(y)
-	return strconv.FormatInt(xi-yi, 10)
+	// we're going to negate y and then use
+	// the add routine
 
+	// if y's leading char is a "-"
+	if string(y[0]) == "-" {
+		// remove it
+		return strAdd(x, y[1:len(y)])
+	}
+
+	// insert it
+	return strAdd(x, "-"+y)
+
+	//xi := strToInt64(x)
+	//yi := strToInt64(y)
+	//return strconv.FormatInt(xi-yi, 10)
 }
 
 func karatsubaString(x string, y string) string {
@@ -176,6 +183,14 @@ func karatsubaString(x string, y string) string {
 
 	adbc := strSub(strSub(pq, ac), bd)
 
+	/*
+		_10toN := pow10str(n)         //strconv.Itoa(int(math.Pow10(n)))
+		_10toHalfN := pow10str(n / 2) //strconv.Itoa(int(math.Pow10(n / 2)))
+
+		term1 := karatsubaString(_10toN, ac)       //strMult(_10toN, ac)
+		term2 := karatsubaString(_10toHalfN, adbc) //strMult(_10toHalfN, adbc)
+	*/
+
 	_10toN := strconv.Itoa(int(math.Pow10(n)))
 	_10toHalfN := strconv.Itoa(int(math.Pow10(n / 2)))
 
@@ -184,6 +199,7 @@ func karatsubaString(x string, y string) string {
 	if n > 16 {
 		fmt.Println("-------")
 		fmt.Printf("n: %d\n", n)
+		fmt.Printf("_10toN: %s\n", _10toN)
 		fmt.Printf("a: %s, b: %s, c: %s, d: %s\n", a, b, c, d)
 		fmt.Printf("p: %s, q: %s\n", p, q)
 		fmt.Printf("adbc: %s\n", adbc)
