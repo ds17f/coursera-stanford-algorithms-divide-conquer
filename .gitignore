@@ -16,3 +16,6 @@
 
 # vi
 *.swp
+
+# vscode
+.vscode
