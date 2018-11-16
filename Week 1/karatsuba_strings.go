@@ -34,17 +34,82 @@ func stringNegative(x string) (int, string) {
 	return 1, x
 }
 
+// Assumptions:
+//  x > y
+//  x > 0 && y > 0
+//  len(x) == len(y)
+func _strSub(x string, y string) string {
+	result := ""
+	carry := 0
+	// grade school subtraction
+	for i := len(x) - 1; i > -1; i-- {
+		// get chars at both positiongs
+		xi, _ := strconv.Atoi(string(x[i]))
+		yi, _ := strconv.Atoi(string(y[i]))
+		//fmt.Printf("xi: %d, yi: %d\n", xi, yi)
+		offset := 0
+		// if x is bigger we need to add 10
+		if xi < yi {
+			offset = 10
+		}
+
+		diff := offset + xi - yi + carry
+
+		carry = 0
+		// if we had an offset we've got to carry
+		if offset == 10 {
+			carry = -1
+		} else {
+			carry = 0
+		}
+
+		result = strconv.Itoa(diff) + result
+		//println(result)
+	}
+	return result
+
+}
+
 func strAdd(xa string, ya string) string {
 	// TODO: check leading sign and update x or y
 	//  1 if pos, -1 if neg
 	xNeg, x := stringNegative(xa)
 	yNeg, y := stringNegative(ya)
+	sign := ""
+	if xNeg < 0 {
+		sign = "-"
+	}
 
 	// Pad strings if necessary
 	if len(x) != len(y) {
 		z := int(math.Max(float64(len(x)), float64(len(y))))
 		x = leftPadString(x, z)
 		y = leftPadString(y, z)
+	}
+
+	// if the signs are different then we have to do subtraction
+	if xNeg != yNeg {
+		sign = ""
+		//TODO: Do subtraction
+		for i := 0; i < len(x); i++ {
+			xi, _ := strconv.Atoi(string(x[i]))
+			yi, _ := strconv.Atoi(string(y[i]))
+			if xi > yi {
+				if xNeg < 0 {
+					sign = "-"
+				}
+				// x is the larger number
+				return sign + _strSub(x, y)
+			} else if xi < yi {
+				if yNeg < 0 {
+					sign = "-"
+				}
+				// y is the larger number
+				return sign + _strSub(y, x)
+			}
+		}
+		// the strings are the same, we return 0
+		return "0"
 	}
 
 	result := ""
@@ -57,11 +122,11 @@ func strAdd(xa string, ya string) string {
 		yi, _ := strconv.Atoi(string(y[i]))
 		//fmt.Printf("xi: %d, yi: %d\n", xi, yi)
 
-		sum := (xi * xNeg) + (yi * yNeg) + (carry * yNeg * xNeg)
+		sum := (xi * xNeg) + (yi * yNeg) + carry
 
 		carry = 0
 		if sum < 0 {
-			carry = 1
+			carry = 0
 			sum = int(math.Abs(float64(sum)))
 		} else if sum > 9 {
 			carry = 1
