@@ -135,6 +135,10 @@ func strAdd(xa string, ya string) string {
 		result = strconv.Itoa(sum) + result
 		//println(result)
 	}
+	if carry == 1 {
+		result = "1" + result
+
+	}
 	return sign + result
 }
 
@@ -183,23 +187,18 @@ func karatsubaString(x string, y string) string {
 
 	adbc := strSub(strSub(pq, ac), bd)
 
-	/*
-		_10toN := pow10str(n)         //strconv.Itoa(int(math.Pow10(n)))
-		_10toHalfN := pow10str(n / 2) //strconv.Itoa(int(math.Pow10(n / 2)))
+	term1 := pow10str(ac, n)
+	term2 := pow10str(adbc, n/2)
 
-		term1 := karatsubaString(_10toN, ac)       //strMult(_10toN, ac)
-		term2 := karatsubaString(_10toHalfN, adbc) //strMult(_10toHalfN, adbc)
-	*/
+	//_10toN := strconv.Itoa(int(math.Pow10(n)))
+	//_10toHalfN := strconv.Itoa(int(math.Pow10(n / 2)))
 
-	_10toN := strconv.Itoa(int(math.Pow10(n)))
-	_10toHalfN := strconv.Itoa(int(math.Pow10(n / 2)))
+	//term1 := strMult(_10toN, ac)
+	//term2 := strMult(_10toHalfN, adbc)
 
-	term1 := strMult(_10toN, ac)
-	term2 := strMult(_10toHalfN, adbc)
 	if n > 16 {
 		fmt.Println("-------")
 		fmt.Printf("n: %d\n", n)
-		fmt.Printf("_10toN: %s\n", _10toN)
 		fmt.Printf("a: %s, b: %s, c: %s, d: %s\n", a, b, c, d)
 		fmt.Printf("p: %s, q: %s\n", p, q)
 		fmt.Printf("adbc: %s\n", adbc)
