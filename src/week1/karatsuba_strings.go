@@ -1,30 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"strconv"
-)
 
-func strToInt64(str string) int64 {
-	n, err := strconv.ParseInt(str, 10, 64)
-	if err != nil {
-		fmt.Printf("Integer overflow for: %s, value: %d\n", str, n)
-	}
-	return n
-}
+	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week1/strmath"
+)
 
 func splitString(str string) (string, string) {
 	midPoint := int(math.Floor(float64(len(str) / 2)))
 	return str[:midPoint], str[midPoint:]
-}
-
-func strMult(x string, y string) string {
-	xi := strToInt64(x)
-	yi := strToInt64(y)
-	//xi, _ := strconv.Atoi(x)
-	//yi, _ := strconv.Atoi(y)
-	return strconv.FormatInt(xi*yi, 10)
 }
 
 func stringNegative(x string) (int, string) {
@@ -82,8 +67,8 @@ func strAdd(xa string, ya string) string {
 	// Pad strings if necessary
 	if len(x) != len(y) {
 		z := int(math.Max(float64(len(x)), float64(len(y))))
-		x = leftPadString(x, z)
-		y = leftPadString(y, z)
+		x = strmath.LeftPadString(x, z)
+		y = strmath.LeftPadString(y, z)
 	}
 
 	// if the signs are different then we have to do subtraction
@@ -169,11 +154,11 @@ func karatsubaString(x string, y string) string {
 	o := float64(len(y1))
 	n := int(math.Max(m, o))
 
-	x1 = leftPadString(x1, n)
-	y1 = leftPadString(y1, n)
+	x1 = strmath.LeftPadString(x1, n)
+	y1 = strmath.LeftPadString(y1, n)
 
 	if n == 1 {
-		return strMult(x1, y1)
+		return strmath.StrMult(x1, y1)
 	}
 
 	a, b := splitString(x1)
@@ -187,23 +172,8 @@ func karatsubaString(x string, y string) string {
 
 	adbc := strSub(strSub(pq, ac), bd)
 
-	term1 := pow10str(ac, n)
-	term2 := pow10str(adbc, n/2)
+	term1 := strmath.Pow10str(ac, n)
+	term2 := strmath.Pow10str(adbc, n/2)
 
-	//_10toN := strconv.Itoa(int(math.Pow10(n)))
-	//_10toHalfN := strconv.Itoa(int(math.Pow10(n / 2)))
-
-	//term1 := strMult(_10toN, ac)
-	//term2 := strMult(_10toHalfN, adbc)
-
-	if n > 16 {
-		fmt.Println("-------")
-		fmt.Printf("n: %d\n", n)
-		fmt.Printf("a: %s, b: %s, c: %s, d: %s\n", a, b, c, d)
-		fmt.Printf("p: %s, q: %s\n", p, q)
-		fmt.Printf("adbc: %s\n", adbc)
-		fmt.Printf("ac: %s, bd: %s, pq: %s\n", ac, bd, pq)
-		fmt.Printf("term1: %s, term2: %s, term3: %s\n", term1, term2, bd)
-	}
 	return strAdd(strAdd(term1, term2), bd)
 }

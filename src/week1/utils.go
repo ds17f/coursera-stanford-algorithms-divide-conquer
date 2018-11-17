@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"math"
-	"strconv"
+
+	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week1/strmath"
 )
 
 func leftPadPowOfTwo(str string) string {
@@ -16,17 +16,7 @@ func leftPadPowOfTwo(str string) string {
 	}
 	nextPowOf2 := floorLog2 + 1.0
 	newSize := math.Pow(2, nextPowOf2)
-	return leftPadString(str, int(newSize))
-}
-
-func leftPadString(str string, size int) string {
-	formatStr := "%0" + strconv.Itoa(size) + "s"
-	return fmt.Sprintf(formatStr, str)
-}
-
-func pow10str(x string, n int) string {
-	formatStr := "%0" + strconv.Itoa(n) + "s"
-	return x + fmt.Sprintf(formatStr, "")
+	return strmath.LeftPadString(str, int(newSize))
 }
 
 func getPlaces(n int) int {
