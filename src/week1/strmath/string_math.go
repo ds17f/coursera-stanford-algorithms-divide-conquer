@@ -120,7 +120,7 @@ func strSignAndAbs(x string) (string, string) {
 	return "", x
 }
 
-// LeftPadString left pads str with n 0's
+// LeftPadString left pads str with 0's so len(result) = n
 func LeftPadString(str string, n int) string {
 	formatStr := "%0" + strconv.Itoa(n) + "s"
 	return fmt.Sprintf(formatStr, str)
