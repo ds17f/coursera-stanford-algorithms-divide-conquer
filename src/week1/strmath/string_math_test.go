@@ -68,6 +68,36 @@ func TestStrAdd(t *testing.T) {
 	}
 }
 
+func TestStrSub(t *testing.T) {
+	// x, y, expected value
+	cases := []struct {
+		x string
+		y string
+		z string
+	}{
+		{"-10", "-20", "10"},
+		{"-20", "-10", "-10"},
+
+		{"10", "20", "-10"},
+		{"20", "10", "10"},
+
+		{"-20", "10", "-30"},
+		{"-10", "20", "-30"},
+
+		{"20", "-10", "30"},
+		{"10", "-20", "30"},
+	}
+
+	for i := 0; i < len(cases); i++ {
+		testCase := cases[i]
+		actual := strmath.StrSub(testCase.x, testCase.y)
+		if testCase.z != actual {
+			t.Logf("StrSub failed to Subtract %s - %s = %s, expected %s", testCase.x, testCase.y, actual, testCase.z)
+			t.Fail()
+		}
+	}
+}
+
 func TestLeftPadString(t *testing.T) {
 	// x, y, expected value
 	cases := []struct {

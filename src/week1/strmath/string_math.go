@@ -58,11 +58,11 @@ func strToInt64(str string) int64 {
 // xa and xy are both string representations of integers of arbitrary length.
 // The returned string is the string representation of the sum of xa, ya.
 // This function is used to add integers greater than 64 bits.
-func StrAdd(xa string, ya string) string {
+func StrAdd(x string, y string) string {
 	// isolate the signs of each number
 	// from the base of the number
-	xSign, absX := strSignAndAbs(xa)
-	ySign, absY := strSignAndAbs(ya)
+	xSign, absX := strSignAndAbs(x)
+	ySign, absY := strSignAndAbs(y)
 
 	// TODO: can probably just pad to pow of 2
 	// Pad strings if necessary
@@ -74,28 +74,7 @@ func StrAdd(xa string, ya string) string {
 
 	// if the signs are different then we have to do subtraction
 	if xSign != ySign {
-		if absX == absY {
-			// x == y but the signs are different so -123 + 123 = 0
-			return "0"
-		}
-		// we need to find out which is bigger, abs(x) or abs(y)
-		// because that will tell us the sign (xSign or ySign)
-		// of the resulting number as well as when we subtract,
-		// which term we are subtracting from
-
-		// to do this we loop through the digits of x and y
-		// comparing each digit to find the larger left most digit
-		for i := 0; i < len(absX); i++ {
-			xi, _ := strconv.Atoi(string(absX[i]))
-			yi, _ := strconv.Atoi(string(absY[i]))
-			if xi > yi {
-				// use x's sign, and subtract absX - absY
-				return xSign + strSub(absX, absY)
-			} else if xi < yi {
-				// use y's sign, and subtract absY - absX
-				return ySign + strSub(absY, absX)
-			}
-		}
+		return StrSub(x, y)
 	}
 
 	result := ""
@@ -140,11 +119,80 @@ func strSignAndAbs(x string) (string, string) {
 	return "", x
 }
 
+// StrSub subtracts x - y and returns the result as a string.
+// x is some int as a string.  y is some int as a string.
+// this is intended for large numbers
+func StrSub(x string, y string) string {
+	// isolate the signs of each number
+	// from the base of the number
+	xSign, absX := strSignAndAbs(x)
+	ySign, absY := strSignAndAbs(y)
+
+	// Pad strings if necessary
+	if len(absX) != len(absY) {
+		z := int(math.Max(float64(len(absX)), float64(len(absY))))
+		absX = LeftPadString(absX, z)
+		absY = LeftPadString(absY, z)
+	}
+
+	// we can group the "-" with the y term
+	// which effectively means we can flip
+	// y's sign
+	if ySign == "-" {
+		ySign = ""
+	} else {
+		ySign = "-"
+	}
+
+	// now if the signs match we're just
+	// doing addition and maintaining the common sign
+	if xSign == ySign {
+		return xSign + StrAdd(absX, absY)
+	}
+
+	// if the signs are different and the numbers are the same
+	if absX == absY {
+		// the result will always be 0 (3 - 3) or (-3 - (-3))
+		return "0"
+	}
+
+	// we need to find out which is bigger, abs(x) or abs(y)
+	// because that will tell us the sign (xSign or ySign)
+	// of the resulting number as well as when we subtract,
+	// which term we subtract from the other.
+	// to do this we loop through the digits of x and y
+	// comparing each digit to find the larger left most digit
+	var larger string
+	var smaller string
+	var largeSign string
+	for i := 0; i < len(absX); i++ {
+		xi, _ := strconv.Atoi(string(absX[i]))
+		yi, _ := strconv.Atoi(string(absY[i]))
+		if xi > yi {
+			larger = absX
+			largeSign = xSign
+			smaller = absY
+			break
+		} else if xi < yi {
+			larger = absY
+			largeSign = ySign
+			smaller = absX
+			break
+		}
+	}
+
+	// finally use grade school subtraction
+	// on a special set (larger > smaller, both are > 0)
+	// and use the sign of the larger on the result
+	return largeSign + gradeSchoolSubtraction(larger, smaller)
+
+}
+
 // Assumptions:
 //  x > y
 //  x > 0 && y > 0
 //  len(x) == len(y)
-func strSub(x string, y string) string {
+func gradeSchoolSubtraction(x string, y string) string {
 	result := ""
 	carry := 0
 	// grade school subtraction
@@ -152,7 +200,7 @@ func strSub(x string, y string) string {
 		// get chars at both positiongs
 		xi, _ := strconv.Atoi(string(x[i]))
 		yi, _ := strconv.Atoi(string(y[i]))
-		//fmt.Printf("xi: %d, yi: %d\n", xi, yi)
+
 		offset := 0
 		// if x is bigger we need to add 10
 		if xi+carry < yi {
@@ -170,7 +218,6 @@ func strSub(x string, y string) string {
 		}
 
 		result = strconv.Itoa(diff) + result
-		//println(result)
 	}
 	return result
 }
