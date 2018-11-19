@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"math"
+
+	mainmath "github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week1/math"
 )
 
 func karatsuba(x int, y int) int {
-	n := getPlaces(x)
-	m := getPlaces(y)
+	n := mainmath.GetPlaces(x)
+	m := mainmath.GetPlaces(y)
 
 	// error
 	//if n != m {
@@ -19,8 +21,8 @@ func karatsuba(x int, y int) int {
 		return x * y
 	}
 
-	a, b := getHalves(x)
-	c, d := getHalves(y)
+	a, b := mainmath.GetHalves(x)
+	c, d := mainmath.GetHalves(y)
 	p := a + b
 	q := c + d
 	// fmt.Println(a, b, c, d)

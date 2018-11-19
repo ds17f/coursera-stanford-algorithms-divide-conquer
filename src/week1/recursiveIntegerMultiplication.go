@@ -2,11 +2,13 @@ package main
 
 import (
 	"math"
+
+	mainmath "github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week1/math"
 )
 
 func recursiveIntegerMutliplication(x int, y int) int {
-	n := getPlaces(x)
-	m := getPlaces(y)
+	n := mainmath.GetPlaces(x)
+	m := mainmath.GetPlaces(y)
 
 	// error
 	if n != m {
@@ -18,8 +20,8 @@ func recursiveIntegerMutliplication(x int, y int) int {
 		return x * y
 	}
 
-	a, b := getHalves(x)
-	c, d := getHalves(y)
+	a, b := mainmath.GetHalves(x)
+	c, d := mainmath.GetHalves(y)
 
 	ac := recursiveIntegerMutliplication(a, c)
 	ad := recursiveIntegerMutliplication(a, d)
