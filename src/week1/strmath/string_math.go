@@ -61,8 +61,8 @@ func strToInt64(str string) int64 {
 func StrAdd(x string, y string) string {
 	// isolate the signs of each number
 	// from the base of the number
-	xSign, absX := strSignAndAbs(x)
-	ySign, absY := strSignAndAbs(y)
+	xSign, absX := StrSignAndAbs(x)
+	ySign, absY := StrSignAndAbs(y)
 
 	// TODO: can probably just pad to pow of 2
 	// Pad strings if necessary
@@ -109,10 +109,10 @@ func StrAdd(x string, y string) string {
 	return xSign + result
 }
 
-// strSignAndAbs takes x and returns a tuple of strings
+// StrSignAndAbs takes x and returns a tuple of strings
 // the first string returned is "" if x is positive, "-" if x is negative
 // the second string is the absolute value of x
-func strSignAndAbs(x string) (string, string) {
+func StrSignAndAbs(x string) (string, string) {
 	if string(x[0]) == "-" {
 		return "-", x[1:len(x)]
 	}
@@ -125,8 +125,8 @@ func strSignAndAbs(x string) (string, string) {
 func StrSub(x string, y string) string {
 	// isolate the signs of each number
 	// from the base of the number
-	xSign, absX := strSignAndAbs(x)
-	ySign, absY := strSignAndAbs(y)
+	xSign, absX := StrSignAndAbs(x)
+	ySign, absY := StrSignAndAbs(y)
 
 	// Pad strings if necessary
 	if len(absX) != len(absY) {
