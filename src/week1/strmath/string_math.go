@@ -15,6 +15,26 @@ func Pow10str(x string, n int) string {
 	return x + fmt.Sprintf(formatStr, "")
 }
 
+// LeftPadString left pads str with 0's so len(result) = n
+func LeftPadString(str string, n int) string {
+	formatStr := "%0" + strconv.Itoa(n) + "s"
+	return fmt.Sprintf(formatStr, str)
+}
+
+// LeftPadPowOfTwo adds leading 0's to str until len(result) is a power of 2
+func LeftPadPowOfTwo(str string) string {
+	log2 := math.Log2(float64(len(str)))
+	floorLog2 := math.Floor(log2)
+	// if we're already at a pow of 2
+	if log2-floorLog2 <= .0001 {
+		// do nothing
+		return str
+	}
+	nextPowOf2 := floorLog2 + 1.0
+	newSize := math.Pow(2, nextPowOf2)
+	return LeftPadString(str, int(newSize))
+}
+
 // StrMult multiplies x * y and returns the result
 // x and y are both string representations of integers
 // but should be small in magnitude (length) to prevent
@@ -120,12 +140,10 @@ func strSignAndAbs(x string) (string, string) {
 	return "", x
 }
 
-// LeftPadString left pads str with 0's so len(result) = n
-func LeftPadString(str string, n int) string {
-	formatStr := "%0" + strconv.Itoa(n) + "s"
-	return fmt.Sprintf(formatStr, str)
-}
-
+// Assumptions:
+//  x > y
+//  x > 0 && y > 0
+//  len(x) == len(y)
 func strSub(x string, y string) string {
 	result := ""
 	carry := 0

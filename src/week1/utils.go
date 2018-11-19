@@ -2,22 +2,7 @@ package main
 
 import (
 	"math"
-
-	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week1/strmath"
 )
-
-func leftPadPowOfTwo(str string) string {
-	log2 := math.Log2(float64(len(str)))
-	floorLog2 := math.Floor(log2)
-	// if we're already at a pow of 2
-	if log2-floorLog2 <= .0001 {
-		// do nothing
-		return str
-	}
-	nextPowOf2 := floorLog2 + 1.0
-	newSize := math.Pow(2, nextPowOf2)
-	return strmath.LeftPadString(str, int(newSize))
-}
 
 func getPlaces(n int) int {
 	if n == 0 {

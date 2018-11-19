@@ -147,8 +147,8 @@ func strSub(x string, y string) string {
 
 func karatsubaString(x string, y string) string {
 	// pad both strings to be powers of 2
-	x1 := leftPadPowOfTwo(x)
-	y1 := leftPadPowOfTwo(y)
+	x1 := strmath.LeftPadPowOfTwo(x)
+	y1 := strmath.LeftPadPowOfTwo(y)
 
 	m := float64(len(x1))
 	o := float64(len(y1))

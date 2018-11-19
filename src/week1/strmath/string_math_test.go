@@ -88,3 +88,25 @@ func TestLeftPadString(t *testing.T) {
 		}
 	}
 }
+
+func TestLeftPadPowOfTwo(t *testing.T) {
+	// x, y, expected value
+	cases := []struct {
+		str string
+		z   string
+	}{
+		{"123", "0123"},
+		{"12334", "00012334"},
+		{"12345678", "12345678"},
+		{"1234567890", "0000001234567890"},
+	}
+
+	for i := 0; i < len(cases); i++ {
+		testCase := cases[i]
+		actual := strmath.LeftPadPowOfTwo(testCase.str)
+		if testCase.z != actual {
+			t.Logf("LeftPadPowOfTwo failed str: %s, expected: %s, result: %s", testCase.str, testCase.z, actual)
+			t.Fail()
+		}
+	}
+}
