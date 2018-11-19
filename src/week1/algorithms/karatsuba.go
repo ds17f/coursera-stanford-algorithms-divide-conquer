@@ -1,4 +1,4 @@
-package main
+package algorithms
 
 import (
 	"math"
@@ -145,7 +145,10 @@ func strSub(x string, y string) string {
 	//return strconv.FormatInt(xi-yi, 10)
 }
 
-func karatsubaString(x string, y string) string {
+//KaratsubaMult multiplies x * y using the karatsuba algorithm.
+// x and y are both string representations of integers of
+// an arbitrary length.
+func KaratsubaMult(x string, y string) string {
 	// pad both strings to be powers of 2
 	x1 := strmath.LeftPadPowOfTwo(x)
 	y1 := strmath.LeftPadPowOfTwo(y)
@@ -166,9 +169,9 @@ func karatsubaString(x string, y string) string {
 	p := strAdd(a, b)
 	q := strAdd(c, d)
 
-	ac := karatsubaString(a, c)
-	bd := karatsubaString(b, d)
-	pq := karatsubaString(p, q)
+	ac := KaratsubaMult(a, c)
+	bd := KaratsubaMult(b, d)
+	pq := KaratsubaMult(p, q)
 
 	adbc := strSub(strSub(pq, ac), bd)
 
