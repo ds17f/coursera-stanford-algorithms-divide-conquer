@@ -5,6 +5,8 @@
 *.so
 *.dylib
 
+# The bin directiory
+bin/
 # Test binary, build with `go test -c`
 *.test
 
@@ -16,3 +18,6 @@
 
 # vi
 *.swp
+
+# vscode
+.vscode
