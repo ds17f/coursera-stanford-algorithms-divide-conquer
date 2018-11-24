@@ -7,6 +7,15 @@ GOGET=$(GOCMD) get
 OUTPUT_DIR=../../bin
 BINARY_NAME=stanford_algos_week1
 
+## Params for external tests
+# update the next 2 vars to change the tests
+COURSE=course1
+ASSIGNMENT=assignment1Multiplication
+
+TEST_DIR=../../stanford-algs
+TESTER=$(TEST_DIR)/tester/shell/tester.sh
+TEST_CASES=$(TEST_DIR)/testCases/$(COURSE)/$(ASSIGNMENT)/input*
+
 all: test build
 build: 
 	$(GOBUILD) -o $(OUTPUT_DIR)/$(BINARY_NAME) -v
@@ -21,3 +30,5 @@ run:
 #deps:
 #    $(GOGET) github.com/markbates/goth
 #    $(GOGET) github.com/markbates/pop
+testall:
+	$(TESTER) -c $(OUTPUT_DIR)/$(BINARY_NAME) $(TEST_CASES)
