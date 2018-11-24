@@ -9,7 +9,7 @@ Go presents an interesting set of challenges that are not found when using the m
 # Weekly Work
 
 ## Week 1
-Week one's challenge asks students to [implement the Karatsubsa Multiplication algorithm for very large numbers](/blob/master/src/week1/docs/Assignment1.png). 
+Week one's challenge asks students to [implement the Karatsubsa Multiplication algorithm for very large numbers](/src/week1/docs/Assignment1.png). 
 
 ### First Attempt: Integers
 I began by attacking the problem using integers.  The actual Karatsuba algorithm is relatively straightforward and simple to implement.  The biggest challenge came when splitting an input number which had an odd number of digits.  It was easy enough to chop bigger numbers but when I got down to `len(x) == 1 && len(y) == 2` things went sour.  I was unsure how to approach the recursion at this point.  In hindsight it occurs to me that I could have just "zero padded" `x` by handling this edge case with specific code.  But as I explored the implementation in the cases that it could solve (even digits) I found that it was unable to deal with large integers.  It was clear that my implementation depended on the `float64` and `int` data types in Go.  Even when I explicitly called for an `int64` I didn't have enough significance to hold the large numbers that were under operation.  Clearly I needed another approach and there were hints in the description of the Karatsuba Multiplication algorithm itself.  
@@ -78,7 +78,7 @@ Students who used Java and Python were at a significant advantage over those usi
 Interestingly, when we offer algorithmic questions during interviews at GoDaddy we will often create multi-tiered challenges.  In the case of Karatsuba Multiplication I could see asking a candidate who had just successfully solved this problem in Java or Python to go one level deeper.  I might ask them to take a second pass at their solution but to avoid the use of a `BigInt` in Java or to consider an explicit use of int-strings in python.
 
 ## Week 2
-Week two's challenge asks students to [count the number of inversions in a very large list of integers](/blob/master/src/week2/docs/Assignment2.png).
+Week two's challenge asks students to [count the number of inversions in a very large list of integers](/src/week2/docs/Assignment2.png).
 
 ### Analysis and Prior Work
 At the core this question is asking us to implement merge sort.  This will provide us with a fast running `O(n log n)` algorithm as long as the work that we do to count the inversions can be done in constant time.  I found this challenge to be far simpler than the prior week's work for two main reasons.  
