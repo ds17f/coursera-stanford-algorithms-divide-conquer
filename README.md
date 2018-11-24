@@ -9,7 +9,7 @@ Go presents an interesting set of challenges that are not found when using the m
 # Weekly Work
 
 ## Week 1
-Week one's challenge asks students to [implement the Karatsubsa Multiplication algorithm for very large numbers](blob/master/src/week1/docs/Assignment1.png). 
+Week one's challenge asks students to [implement the Karatsubsa Multiplication algorithm for very large numbers](/blob/master/src/week1/docs/Assignment1.png). 
 
 ### First Attempt: Integers
 I began by attacking the problem using integers.  The actual Karatsuba algorithm is relatively straightforward and simple to implement.  The biggest challenge came when splitting an input number which had an odd number of digits.  It was easy enough to chop bigger numbers but when I got down to `len(x) == 1 && len(y) == 2` things went sour.  I was unsure how to approach the recursion at this point.  In hindsight it occurs to me that I could have just "zero padded" `x` by handling this edge case with specific code.  But as I explored the implementation in the cases that it could solve (even digits) I found that it was unable to deal with large integers.  It was clear that my implementation depended on the `float64` and `int` data types in Go.  Even when I explicitly called for an `int64` I didn't have enough significance to hold the large numbers that were under operation.  Clearly I needed another approach and there were hints in the description of the Karatsuba Multiplication algorithm itself.  
@@ -76,5 +76,26 @@ Now that I knew that my implementation was complete and correct I was curious wh
 Students who used Java and Python were at a significant advantage over those using a language like Go.  Java has a `BigInt` class which can hold ints > 64 bit.  Python allows integers of virtually unlimited length.  When I found code in Java and Python that implemented Karatsubsa Multiplication it was devoid of what I found to be the most challenging and interesting part of this exercise.  Those implementations were largely just a direct translation of the provided psuedo code into the appropriate language.  They were quick and clean and clear, but lacked the depth of challenge that was presented by the limitations of Go.  In Go I had no choice but to implement Addition and Subtraction on my own, and I had work with int-strings.  Without that part of the exercise there isn't much of a challenge.  One might as well just use in built math functions.
 
 Interestingly, when we offer algorithmic questions during interviews at GoDaddy we will often create multi-tiered challenges.  In the case of Karatsuba Multiplication I could see asking a candidate who had just successfully solved this problem in Java or Python to go one level deeper.  I might ask them to take a second pass at their solution but to avoid the use of a `BigInt` in Java or to consider an explicit use of int-strings in python.
+
+## Week 2
+Week two's challenge asks students to [count the number of inversions in a very large list of integers](/blob/master/src/week2/docs/Assignment2.png).
+
+### Analysis and Prior Work
+At the core this question is asking us to implement merge sort.  This will provide us with a fast running `O(n log n)` algorithm as long as the work that we do to count the inversions can be done in constant time.  I found this challenge to be far simpler than the prior week's work for two main reasons.  
+
+First, the lectures spend a great deal of time working with merge sort.  The discussion of the algorithm, analysis of it, and finally the direct discussion of how to "piggy-back" on merge sort to count inversions.  The trick, being able to count the inversions in constant time, is relatively straightforward if you understand the implication of the merge on the pre-sorted left/right halves of the array.  I've added comments to the source files that I wrote to discuss this, but in essence the fact that both lists are sorted implies that when an inversion is found, all remaining elements in the left array are also inverted against the current element of the right array.  This allows for simple arithmetic to determine the count of inversions.
+
+Second, I personally had an advantage because I've used this exact question to interview candidates at GoDaddy.  In fact, I have implemented a solution to this problem in Python for those interviews.  The solutions in these two languages are actually syntactically similar insofar as Python and Go have common expressions.  You're using similar `append` functions and array slicing syntax to do the same work.
+
+Since the material was familiar to me, I made it a point to work through the solution without looking at the lecture notes or my past work.  Instead I relied on my understanding of the algorithm to work through exactly what it should do.  In the end I solved the problem quickly and only faced one minor bug.
+
+### Go Implementation Observations
+#### A minor bug
+It's worth mentioning that when I wrote the initial implementation I failed to use an `if/else if` construct and instead used a pair of `if` statements in the loop in the main body of the `merge` routine.  This resulted in an `index out of bounds` error which was a bit confusing when I encountered it.  The index out of bounds occurred when the first condition was matched and the index `i` was incremented.  This would allow the second condition to evaluate with `i` being out of range.  It was silly and simple to fix once I saw it.
+
+#### Ain't no `while` in golang
+One interesting syntactic discovery while working on the `merge` routine was that Go lacks a `while` loop.  The documentation humorously states that "in Go, `while` is spelled `for`."  This is a factual statement.  Go uses a `for` construct which only includes the exit clause in place of a `while` statement.  When the initializer condition and increment statement are removed from the `for` declaration, all that remains is an endless loop which exits if it's boolean bounding statement resolves to false.
+
+I'm no language designer but I have to think that having a `while` is a bit clearer syntactically, even if it is just a synonym for a bounded, non-initialized, non-incrementing `for` loop.  Regardless, the compiler spit out a reasonable message and a quick google search lead to Go's excellent documentation which cleared up my mistake.
 
 
