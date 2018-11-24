@@ -31,4 +31,5 @@ run:
 #    $(GOGET) github.com/markbates/goth
 #    $(GOGET) github.com/markbates/pop
 testall:
+	$(GOBUILD) -o $(OUTPUT_DIR)/$(BINARY_NAME) -v
 	$(TESTER) -c $(OUTPUT_DIR)/$(BINARY_NAME) $(TEST_CASES)
