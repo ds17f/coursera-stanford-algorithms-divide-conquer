@@ -1,0 +1,3 @@
+[submodule "stanford-algs"]
+	path = stanford-algs
+	url = git@github.com:damiansilbergleithcunniff/stanford-algs.git
