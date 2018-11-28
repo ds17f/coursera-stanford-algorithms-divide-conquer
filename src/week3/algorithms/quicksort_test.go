@@ -3,6 +3,8 @@ package algorithms_test
 import (
 	"testing"
 
+	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week3/lib"
+
 	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week3/algorithms"
 )
 
@@ -30,33 +32,27 @@ func TestQuickSort(t *testing.T) {
 	}
 }
 
-func compareSlices(a []int, b []int) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i := 0; i < len(a); i++ {
-		if a[i] != b[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func TestPartition(t *testing.T) {
 	cases := []struct {
-		n     []int
-		left  []int
-		right []int
+		n []int
+		p int
 	}{
-		{[]int{3, 8, 2, 5, 1, 4, 7, 6}, []int{2, 1}, []int{8, 5, 4, 7, 6}},
+		{[]int{8, 2, 3, 5, 1, 4, 7, 6}, 2},
+		{[]int{8, 2, 3, 5, 1, 4, 7, 6}, 3},
+		{[]int{8, 2, 3, 5, 1, 4, 7, 6}, 5},
+		{[]int{8, 2, 3, 5, 1, 4, 7, 6}, 0},
+		{[]int{8, 2, 3, 5, 1, 4, 7, 6}, 7},
 	}
 
 	// x, y, expected value
 	for i := 0; i < len(cases); i++ {
 		testCase := cases[i]
-		left, right := algorithms.Partition(testCase.n)
-		if !compareSlices(testCase.left, left) || !compareSlices(testCase.right, right) {
-			t.Logf("Paritionfailed for case: %v.  Expected: left: %v, right: %v but produced: left: %v, right: %v", testCase.n, testCase.left, testCase.right, left, right)
+		clone := lib.CloneSlice(testCase.n)
+		pivotVal := clone[testCase.p]
+
+		left, right := algorithms.Partition(clone, testCase.p)
+		if !lib.AllLess(left, pivotVal) || !lib.AllGreater(right, pivotVal) {
+			t.Logf("Parition failed for case: %v pivot around: %v. Produced: left: %v, right: %v", testCase.n, testCase.p, left, right)
 			t.Fail()
 		}
 	}

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week3/algorithms"
+	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week3/lib"
 )
 
 func readFile(fileName string) []int {
@@ -34,15 +35,6 @@ func readFile(fileName string) []int {
 	return fileLines
 }
 
-// cloneSlice creates a clone of the slice
-// in a new array and then returns a slice
-// of that new array
-func cloneSlice(slice []int) []int {
-	clone := make([]int, len(slice))
-	copy(clone, slice)
-	return clone
-}
-
 func main() {
 	if len(os.Args) != 2 {
 		binName := os.Args[0]
@@ -53,8 +45,8 @@ func main() {
 
 	fileLines := readFile(os.Args[1])
 
-	_, first := algorithms.QuickSort(algorithms.ChooseFirstPivot, cloneSlice(fileLines))
-	_, last := algorithms.QuickSort(algorithms.ChooseLastPivot, cloneSlice(fileLines))
-	_, median := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, cloneSlice(fileLines))
+	_, first := algorithms.QuickSort(algorithms.ChooseFirstPivot, lib.CloneSlice(fileLines))
+	_, last := algorithms.QuickSort(algorithms.ChooseLastPivot, lib.CloneSlice(fileLines))
+	_, median := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, lib.CloneSlice(fileLines))
 	fmt.Println(first, last, median)
 }
