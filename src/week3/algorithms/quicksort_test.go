@@ -30,6 +30,38 @@ func TestQuickSort(t *testing.T) {
 	}
 }
 
+func compareSlices(a []int, b []int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func TestPartition(t *testing.T) {
+	cases := []struct {
+		n     []int
+		left  []int
+		right []int
+	}{
+		{[]int{3, 8, 2, 5, 1, 4, 7, 6}, []int{2, 1}, []int{8, 5, 4, 7, 6}},
+	}
+
+	// x, y, expected value
+	for i := 0; i < len(cases); i++ {
+		testCase := cases[i]
+		left, right := algorithms.Partition(testCase.n)
+		if !compareSlices(testCase.left, left) || !compareSlices(testCase.right, right) {
+			t.Logf("Paritionfailed for case: %v.  Expected: left: %v, right: %v but produced: left: %v, right: %v", testCase.n, testCase.left, testCase.right, left, right)
+			t.Fail()
+		}
+	}
+}
+
 func TestChooseFirstPivot(t *testing.T) {
 	cases := []struct {
 		n []int
