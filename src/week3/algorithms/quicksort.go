@@ -61,7 +61,7 @@ func ChooseLastPivot(k []int) int {
 	return len(k) - 1
 }
 
-// ChooseMedianOfThreePivot returns the median of three (fill this in)
+// ChooseMedianOfThreePivot returns the median of the first/last/mid elements of the array
 func ChooseMedianOfThreePivot(k []int) int {
 	mid := 0
 	end := len(k) - 1
@@ -71,14 +71,27 @@ func ChooseMedianOfThreePivot(k []int) int {
 		mid = len(k) / 2
 	}
 
-	// c < a < b || c > a > b
-	if (k[end] < k[0] && k[0] < k[mid]) || (k[end] > k[0] && k[0] > k[mid]) {
-		return 0
+	// a > b
+	if k[0] > k[mid] {
+		if k[0] < k[end] {
+			// b < a < c
+			return 0
+		} else if k[mid] > k[end] {
+			// a > b > c
+			return mid
+		}
+		// b < c < a
+		return end
 	}
-	// a < b < c || c > b > a
-	if (k[0] < k[mid] && k[mid] < k[end]) || (k[0] > k[mid] && k[mid] > k[end]) {
+	// b > a
+	if k[0] < k[end] {
+		if k[mid] > k[end] {
+			// a < c < b
+			return end
+		}
+		// a < b < c
 		return mid
 	}
-
-	return end
+	// c < a < b
+	return 0
 }
