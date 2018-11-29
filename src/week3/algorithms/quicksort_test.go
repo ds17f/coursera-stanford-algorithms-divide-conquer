@@ -8,30 +8,6 @@ import (
 	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week3/algorithms"
 )
 
-var quickSortCases = []struct {
-	n []int
-	z int
-}{
-	{[]int{2, 3, 4}, 0},
-	{[]int{3, 2, 4}, 1},
-	{[]int{2, 4, 1, 3, 5}, 3},
-	{[]int{3, 4, 1, 2, 5}, 4},
-	{[]int{5, 4, 1, 3, 2}, 8},
-}
-
-// TODO: Need to work out the cases and the array expectations.  Not entirely sure how to mock with go and recursion
-func TestQuickSort(t *testing.T) {
-	// x, y, expected value
-	for i := 0; i < len(quickSortCases); i++ {
-		testCase := quickSortCases[i]
-		actual := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, testCase.n)
-		if testCase.z != actual {
-			t.Logf("QuickSort failed for case: %v.  Expected: %d but produced: %d", testCase.n, testCase.z, actual)
-			t.Fail()
-		}
-	}
-}
-
 func TestPartition(t *testing.T) {
 	cases := []struct {
 		n []int
