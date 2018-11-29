@@ -11,9 +11,16 @@ import (
 type fnChoosePivot func(k []int) int
 
 // QuickSort implements the QuickSort algorithm
-// and returns the sorted array and the number of comparisons made
-func QuickSort(choosePivot fnChoosePivot, k []int) ([]int, int) {
-	return nil, -1
+// and returns the number of comparisons made
+func QuickSort(choosePivot fnChoosePivot, k []int) int {
+	if len(k) <= 1 {
+		return 0
+	}
+	pivot := choosePivot(k)
+	left, right := Partition(k, pivot)
+	ml := QuickSort(choosePivot, left)
+	mr := QuickSort(choosePivot, right)
+	return ml + mr + len(k) - 1
 }
 
 // Partition paritions an array k around the element at i.
@@ -56,6 +63,22 @@ func ChooseLastPivot(k []int) int {
 
 // ChooseMedianOfThreePivot returns the median of three (fill this in)
 func ChooseMedianOfThreePivot(k []int) int {
-	//TODO implment this
-	return 0
+	mid := 0
+	end := len(k) - 1
+	if len(k)%2 == 0 {
+		mid = len(k)/2 - 1
+	} else {
+		mid = len(k) / 2
+	}
+
+	// c < a < b || c > a > b
+	if (k[end] < k[0] && k[0] < k[mid]) || (k[end] > k[0] && k[0] > k[mid]) {
+		return 0
+	}
+	// a < b < c || c > b > a
+	if (k[0] < k[mid] && k[mid] < k[end]) || (k[0] > k[mid] && k[mid] > k[end]) {
+		return mid
+	}
+
+	return end
 }

@@ -45,8 +45,8 @@ func main() {
 
 	fileLines := readFile(os.Args[1])
 
-	_, first := algorithms.QuickSort(algorithms.ChooseFirstPivot, lib.CloneSlice(fileLines))
-	_, last := algorithms.QuickSort(algorithms.ChooseLastPivot, lib.CloneSlice(fileLines))
-	_, median := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, lib.CloneSlice(fileLines))
+	first := algorithms.QuickSort(algorithms.ChooseFirstPivot, lib.CloneSlice(fileLines))
+	last := algorithms.QuickSort(algorithms.ChooseLastPivot, lib.CloneSlice(fileLines))
+	median := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, lib.CloneSlice(fileLines))
 	fmt.Println(first, last, median)
 }

@@ -24,7 +24,7 @@ func TestQuickSort(t *testing.T) {
 	// x, y, expected value
 	for i := 0; i < len(quickSortCases); i++ {
 		testCase := quickSortCases[i]
-		_, actual := algorithms.QuickSort(algorithms.ChooseFirstPivot, testCase.n)
+		actual := algorithms.QuickSort(algorithms.ChooseMedianOfThreePivot, testCase.n)
 		if testCase.z != actual {
 			t.Logf("QuickSort failed for case: %v.  Expected: %d but produced: %d", testCase.n, testCase.z, actual)
 			t.Fail()
