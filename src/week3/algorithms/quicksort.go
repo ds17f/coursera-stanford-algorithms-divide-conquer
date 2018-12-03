@@ -48,7 +48,7 @@ func Partition(k []int, p int) ([]int, []int) {
 	// put the pivot element in the right place
 	lib.Swap(k, i-1, 0)
 
-	return k[0 : i-1], k[i:len(k)]
+	return k[:i-1], k[i:]
 }
 
 // ChooseFirstPivot returns the first index of the array
