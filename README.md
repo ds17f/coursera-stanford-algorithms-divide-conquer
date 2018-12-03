@@ -127,4 +127,33 @@ The general implementation of `Partition` requires that we pass a `left-index` a
 
 I initially figured that this would create additional memory consumption but this is not exactly the case.  Go `slice`s are passed by value and so each call to `Partition`, regardless of the specific `slice` we pass, will make a copy of that `slice`.  Effecitvely, we get something for nothing.  We get increased code simplicity and the same memory performance.
 
-An alternative implementation might pass a pointer to the `slice` which would pervent the copying, or possibly one could pass the array itself.  The former would likely work, and be relatively straightforward albeit it would add a bunch of poitner dereferencing.  The latter though would present challenges as the size of an `array` in `Go` is a fundamental part of the `type` of that `array`.  Passing it as a parameter would require a fixed length for that array.  It is generally better to use `slice`s for just such a reason, and so that's what I chose to do.
+An alternative implementation might pass a pointer to the `slice` which would pervent the copying, or possibly one could pass the array itself.  The former would likely work, and be relatively straightforward albeit it would add a bunch of poitner dereferencing.  The latter though would present challenges as the size of an `array` in `Go` is a fundamental part of the `type` of that `array`.  Passing it as a parameter would require a fixed length for that `array`.  It is generally better to use `slice`s for just such a reason, and so that's what I chose to do.
+
+#### Slice Helpers
+Go `slice`s are pretty awesome but it was clear from the start that I was going to need some helper utilities in order to do some relatively simple tasks.  I broke off a `lib` package and collected a set of routines that would help me work with slices.  
+
+Copying a `slice` in Go creates a new `slice` which points to the same `array`.  I needed to be able to clone a `slice` and produce a new copy of the `array` so I wrote a `CloneSlice` routine to do this.  
+
+Equality is undefined for `slice`s so I had to implement an element by element comparison.
+
+To prove that `Partition` worked correctly in the tests I needed to verify that the resulting arrays were all either greater or less than the appropriate paritioned results.  I added slice helpers for this.
+
+Finally, swapping elements of a slice is a fundamental need for `Partition` so I wrote an implementation of that to keep the code as DRY as possible.
+
+#### QuickSort
+The implmentation of the actual `QuickSort` is incredibly simple.  This is one of the most impressive parts of the algorithm.  It's all of 8 lines of code.  With that said, once implemented, I faced a tough challenge on how to test this code.
+
+I don't have a lot of experience testing recursive functions.  I suppose I could produce mock implementations of both `Partition` and `choosePivot` and design test cases where the expected output is generated.  But it seemed to me that this would be wasteful.  The core functionality of the `QuickSort` really exists in those two methods so appropriately testing them should work as expected.
+
+We likely could test to make sure that `choosePivot` is called with the appropriate paramters, likewise for `Partition`, but things got a bit fuzzy when I started thinking about evaluating what gets passed to the recursive calls to `QuickSort`.  I'm unsure how to properly test a recursive function without significantly alerting the prototype or the environment.  I would love to discuss this further.  
+
+For now, I removed the unit test on `QuickSort` and simply relied on the full tests to prove that `QuickSort` is behaving correctly.
+
+#### Choose Median Of Three
+The final piece of the puzzle was to produce an adequate implementation of the third `ChoosePivot` routine: `ChooseMedianOfThree`.  This case is interesting to me because it highlights a fundamental issue that I have with these kinds of problems (when examined in the real world and used as intergview questions).
+
+##### A Correct Implementation
+
+##### An Efficient Implementation
+
+##### A Reliable Implementation?
