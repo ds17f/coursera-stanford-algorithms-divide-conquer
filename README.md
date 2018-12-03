@@ -99,3 +99,32 @@ One interesting syntactic discovery while working on the `merge` routine was tha
 I'm no language designer but I have to think that having a `while` is a bit clearer syntactically, even if it is just a synonym for a bounded, non-initialized, non-incrementing `for` loop.  Regardless, the compiler spit out a reasonable message and a quick google search lead to Go's excellent documentation which cleared up my mistake.
 
 
+## Week 3
+Week three's challenge asks students to [implement quicksort using 3 different pivot routines and measure comparisons](/src/week3/docs/Assignment3.png).
+
+### Analysis and Solution
+#### Setup
+I began by writng stubs and tests to cover the expected functionality of parts of the system.  The problem asks for two of the `ChoosePivot` routines to be incredibly simple; one returns the first element to pivot around and one returns the last element.  So I implemented and tested them immediately.  
+
+I wrote a prototype for the `QuickSort` method and decided that I would pass the `ChoosePivot` function as a parameter.  Since I'm new to Go I had to do a little research to discover how to actually declare and implement this.   The syntax, though new to me, is straightforward enough.  One simply declares a new `type` and specifies a function prototype for that type: 
+```
+type fnChoosePivot func(k []int) int
+```
+Once that's done the new type can be specified as the type of a parameter on the target function: 
+```
+func QuickSort(choosePivot fnChoosePivot, k []int) ([]int, int) {
+  ...
+}
+```
+I thought a bit about what to actually test on the `QuickSort` routine.  The problem asks about counting the number of comparisons performed as a function of the `ChoosePivot` method that we use.  This implies that we'll need different test cases for each of the `ChoosePivot` routines, and that we'll need to calculate those beforehand.  There was enough complexity here for me to defer the implementation of the tests for `QuickSort` until later.
+
+#### Partition
+I took a stab at the `Partition` function as it is both central to the operation of `QuickSort` and simple to implement.  Interestingly, the nature of Go `slices` makes the routine even easier than it might be in another language.
+
+I think of Go `slices` as little windows that look in on an underlying `array`.  They can be modified without consequence to the underlying array, and operating on their elements modifies the elements of that array.  This works really well in a problem like `QuickSort` where we know we want to look at segments of the array and make in-place changes.
+
+The general implementation of `Partition` requires that we pass a `left-index` and `right-index` so that we can create a window over the elements that we actually want to work with.  By leveraging `slice`s we can drop those indicies and assume that we will partition the entire `slice` that is received as input.  
+
+I initially figured that this would create additional memory consumption but this is not exactly the case.  Go `slice`s are passed by value and so each call to `Partition`, regardless of the specific `slice` we pass, will make a copy of that `slice`.  Effecitvely, we get something for nothing.  We get increased code simplicity and the same memory performance.
+
+An alternative implementation might pass a pointer to the `slice` which would pervent the copying, or possibly one could pass the array itself.  The former would likely work, and be relatively straightforward albeit it would add a bunch of poitner dereferencing.  The latter though would present challenges as the size of an `array` in `Go` is a fundamental part of the `type` of that `array`.  Passing it as a parameter would require a fixed length for that array.  It is generally better to use `slice`s for just such a reason, and so that's what I chose to do.
