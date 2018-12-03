@@ -150,10 +150,21 @@ We likely could test to make sure that `choosePivot` is called with the appropri
 For now, I removed the unit test on `QuickSort` and simply relied on the full tests to prove that `QuickSort` is behaving correctly.
 
 #### Choose Median Of Three
-The final piece of the puzzle was to produce an adequate implementation of the third `ChoosePivot` routine: `ChooseMedianOfThree`.  This case is interesting to me because it highlights a fundamental issue that I have with these kinds of problems (when examined in the real world and used as intergview questions).
+The final piece of the puzzle was to produce an adequate implementation of the third `ChoosePivot` routine: `ChooseMedianOfThree`.  This case is interesting to me because it highlights a fundamental issue that I have with these kinds of problems (when examined in the real world and used as interview questions).
 
 ##### A Correct Implementation
+It it relatively easy to implement correct solution to the median of three numbers.  If we define `a`, `b`, and `c` as the three numbers to compare we can simply take `a` and compare it to see if it is between `b` and `c`, if it is, return `a`. Next, do the same for `b` between `a` and `c`, and return `b`.  Finally, otherwise, return `c`.  [Code for this can be found here.](https://github.com/damiansilbergleithcunniff/coursera-stanford-algorithms-divide-conquer/blob/1a33fa186397a567e4bf1c6029332f6e1f382ab4/src/week3/algorithms/quicksort.go#L65-L84)
+
+This solution is correct in that it will always return the median of the three numbers.  However, in its worst case it requires 8 comparisons to determine the result.  In its best case it still requires 4.  So as Dr. Roughgarden has taught us we must ask the question, "Can we do better?"
 
 ##### An Efficient Implementation
+As it turns out it is possible to write a more efficient version of the Median of Three problem.  It's possible to determine the median of 3 with only 3 comparisons.  [This can be seen here.](https://github.com/damiansilbergleithcunniff/coursera-stanford-algorithms-divide-conquer/blob/a215c230e350f5607de5f6f61b14157317f97758/src/week3/algorithms/quicksort.go#L65-L97)
+
+I found that, in order to develop this solution I needed to write out the permutations for the possible outcomes and ensure that the code covered those cases.  Likewise I needed to produce tests that would exercise them.
 
 ##### A Reliable Implementation?
+In the real world we need to strive for our code to be both efficient and maintainable.  We want to make sure that developers, especially more junior developers, are able to work with the code that we produce.  Often these two potentials are at odds.  I made it a point to comment both of these code blocks, but if I hadn't it would be far easier to follow the first implementation than the second.  So what then is the right choice?
+
+I would argue that the difference in performance here falls into the scope of the constant terms that we ignore when we're doing Big Oh notation.  As such, we should care more about the maintainablility of what we write.  Obviously on tiny embedded systems, or super performant code, we might care.  But in the general cases that we really deal with in most of our work we would prefer to be clear over efficient (at this scale).  We see this in the [Zen of Python](https://www.python.org/dev/peps/pep-0020/) and this is no doubt a contributor to that language's widespread success.
+
+It is, perhaps, overly analytical to examine this case and debate this point, but I could easily see a candidate getting a "ding" for using the first solution and not the second.  It's important to understand the code that you're writing, what you're writing it for, and to target solutions to both the problem and the audience.
