@@ -99,3 +99,72 @@ One interesting syntactic discovery while working on the `merge` routine was tha
 I'm no language designer but I have to think that having a `while` is a bit clearer syntactically, even if it is just a synonym for a bounded, non-initialized, non-incrementing `for` loop.  Regardless, the compiler spit out a reasonable message and a quick google search lead to Go's excellent documentation which cleared up my mistake.
 
 
+## Week 3
+Week three's challenge asks students to [implement quicksort using 3 different pivot routines and measure comparisons](/src/week3/docs/Assignment3.png).
+
+### Analysis and Solution
+#### Setup
+I began by writng stubs and tests to cover the expected functionality of parts of the system.  The problem asks for two of the `ChoosePivot` routines to be incredibly simple; one returns the first element to pivot around and one returns the last element.  So I implemented and tested them immediately.  
+
+I wrote a prototype for the `QuickSort` method and decided that I would pass the `ChoosePivot` function as a parameter.  Since I'm new to Go I had to do a little research to discover how to actually declare and implement this.   The syntax, though new to me, is straightforward enough.  One simply declares a new `type` and specifies a function prototype for that type: 
+```
+type fnChoosePivot func(k []int) int
+```
+Once that's done the new type can be specified as the type of a parameter on the target function: 
+```
+func QuickSort(choosePivot fnChoosePivot, k []int) ([]int, int) {
+  ...
+}
+```
+I thought a bit about what to actually test on the `QuickSort` routine.  The problem asks about counting the number of comparisons performed as a function of the `ChoosePivot` method that we use.  This implies that we'll need different test cases for each of the `ChoosePivot` routines, and that we'll need to calculate those beforehand.  There was enough complexity here for me to defer the implementation of the tests for `QuickSort` until later.
+
+#### Partition
+I took a stab at the `Partition` function as it is both central to the operation of `QuickSort` and simple to implement.  Interestingly, the nature of Go `slices` makes the routine even easier than it might be in another language.
+
+I think of Go `slices` as little windows that look in on an underlying `array`.  They can be modified without consequence to the underlying array, and operating on their elements modifies the elements of that array.  This works really well in a problem like `QuickSort` where we know we want to look at segments of the array and make in-place changes.
+
+The general implementation of `Partition` requires that we pass a `left-index` and `right-index` so that we can create a window over the elements that we actually want to work with.  By leveraging `slice`s we can drop those indicies and assume that we will partition the entire `slice` that is received as input.  
+
+I initially figured that this would create additional memory consumption but this is not exactly the case.  Go `slice`s are passed by value and so each call to `Partition`, regardless of the specific `slice` we pass, will make a copy of that `slice`.  Effecitvely, we get something for nothing.  We get increased code simplicity and the same memory performance.
+
+An alternative implementation might pass a pointer to the `slice` which would pervent the copying, or possibly one could pass the array itself.  The former would likely work, and be relatively straightforward albeit it would add a bunch of poitner dereferencing.  The latter though would present challenges as the size of an `array` in `Go` is a fundamental part of the `type` of that `array`.  Passing it as a parameter would require a fixed length for that `array`.  It is generally better to use `slice`s for just such a reason, and so that's what I chose to do.
+
+#### Slice Helpers
+Go `slice`s are pretty awesome but it was clear from the start that I was going to need some helper utilities in order to do some relatively simple tasks.  I broke off a `lib` package and collected a set of routines that would help me work with slices.  
+
+Copying a `slice` in Go creates a new `slice` which points to the same `array`.  I needed to be able to clone a `slice` and produce a new copy of the `array` so I wrote a `CloneSlice` routine to do this.  
+
+Equality is undefined for `slice`s so I had to implement an element by element comparison.
+
+To prove that `Partition` worked correctly in the tests I needed to verify that the resulting arrays were all either greater or less than the appropriate paritioned results.  I added slice helpers for this.
+
+Finally, swapping elements of a slice is a fundamental need for `Partition` so I wrote an implementation of that to keep the code as DRY as possible.
+
+#### QuickSort
+The implmentation of the actual `QuickSort` is incredibly simple.  This is one of the most impressive parts of the algorithm.  It's all of 8 lines of code.  With that said, once implemented, I faced a tough challenge on how to test this code.
+
+I don't have a lot of experience testing recursive functions.  I suppose I could produce mock implementations of both `Partition` and `choosePivot` and design test cases where the expected output is generated.  But it seemed to me that this would be wasteful.  The core functionality of the `QuickSort` really exists in those two methods so appropriately testing them should work as expected.
+
+We likely could test to make sure that `choosePivot` is called with the appropriate paramters, likewise for `Partition`, but things got a bit fuzzy when I started thinking about evaluating what gets passed to the recursive calls to `QuickSort`.  I'm unsure how to properly test a recursive function without significantly alerting the prototype or the environment.  I would love to discuss this further.  
+
+For now, I removed the unit test on `QuickSort` and simply relied on the full tests to prove that `QuickSort` is behaving correctly.
+
+#### Choose Median Of Three
+The final piece of the puzzle was to produce an adequate implementation of the third `ChoosePivot` routine: `ChooseMedianOfThree`.  This case is interesting to me because it highlights a fundamental issue that I have with these kinds of problems (when examined in the real world and used as interview questions).
+
+##### A Correct Implementation
+It it relatively easy to implement correct solution to the median of three numbers.  If we define `a`, `b`, and `c` as the three numbers to compare we can simply take `a` and compare it to see if it is between `b` and `c`, if it is, return `a`. Next, do the same for `b` between `a` and `c`, and return `b`.  Finally, otherwise, return `c`.  [Code for this can be found here.](https://github.com/damiansilbergleithcunniff/coursera-stanford-algorithms-divide-conquer/blob/1a33fa186397a567e4bf1c6029332f6e1f382ab4/src/week3/algorithms/quicksort.go#L65-L84)
+
+This solution is correct in that it will always return the median of the three numbers.  However, in its worst case it requires 8 comparisons to determine the result.  In its best case it still requires 4.  So as Dr. Roughgarden has taught us we must ask the question, "Can we do better?"
+
+##### An Efficient Implementation
+As it turns out it is possible to write a more efficient version of the Median of Three problem.  It's possible to determine the median of 3 with only 3 comparisons.  [This can be seen here.](https://github.com/damiansilbergleithcunniff/coursera-stanford-algorithms-divide-conquer/blob/a215c230e350f5607de5f6f61b14157317f97758/src/week3/algorithms/quicksort.go#L65-L97)
+
+I found that, in order to develop this solution I needed to write out the permutations for the possible outcomes and ensure that the code covered those cases.  Likewise I needed to produce tests that would exercise them.
+
+##### A Reliable Implementation?
+In the real world we need to strive for our code to be both efficient and maintainable.  We want to make sure that developers, especially more junior developers, are able to work with the code that we produce.  Often these two potentials are at odds.  I made it a point to comment both of these code blocks, but if I hadn't it would be far easier to follow the first implementation than the second.  So what then is the right choice?
+
+I would argue that the difference in performance here falls into the scope of the constant terms that we ignore when we're doing Big Oh notation.  As such, we should care more about the maintainablility of what we write.  Obviously on tiny embedded systems, or super performant code, we might care.  But in the general cases that we really deal with in most of our work we would prefer to be clear over efficient (at this scale).  We see this in the [Zen of Python](https://www.python.org/dev/peps/pep-0020/) and this is no doubt a contributor to that language's widespread success.
+
+It is, perhaps, overly analytical to examine this case and debate this point, but I could easily see a candidate getting a "ding" for using the first solution and not the second.  It's important to understand the code that you're writing, what you're writing it for, and to target solutions to both the problem and the audience.
