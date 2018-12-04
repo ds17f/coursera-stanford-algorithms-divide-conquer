@@ -1,6 +1,32 @@
 # coursera-stanford-algorithms-divide-conquer
 This repository contains my solutions to: [Divide and Conquer, Sorting and Searching, and Randomized Algorithms](https://www.coursera.org/specializations/algorithms), the first course in Coursera's: [Algorithms Specialization](https://www.coursera.org/specializations/algorithms) which seeks to help students "Learn To Think Like A Computer Scientist. Master the fundamentals of the design and analysis of algorithms."
 
+# Table Of Contents
+- [Language Choice: Go](#language-choice-go)
+- [Weekly Work](#weekly-work)
+  * [Week 1](#week-1)
+    + [First Attempt: Integers](#first-attempt-integers)
+      - [Aside: Working with Types in Go (as a JS developer)](#aside-working-with-types-in-go-as-a-js-developer)
+    + [Second Attempt: Numbers as Strings](#second-attempt-numbers-as-strings)
+    + [Testing](#testing)
+      - [External Tests](#external-tests)
+    + [Comparing My Results](#comparing-my-results)
+  * [Week 2](#week-2)
+    + [Analysis and Prior Work](#analysis-and-prior-work)
+    + [Go Implementation Observations](#go-implementation-observations)
+      - [A minor bug](#a-minor-bug)
+      - [Ain't no `while` in golang](#aint-no-while-in-golang)
+  * [Week 3](#week-3)
+    + [Analysis and Solution](#analysis-and-solution)
+      - [Setup](#setup)
+      - [Partition](#partition)
+      - [Slice Helpers](#slice-helpers)
+      - [QuickSort](#quicksort)
+      - [Choose Median Of Three](#choose-median-of-three)
+        * [A Correct Implementation](#a-correct-implementation)
+        * [An Efficient Implementation](#an-efficient-implementation)
+        * [A Reliable Implementation?](#a-reliable-implementation)
+
 # Language Choice: Go
 I've chosen Go as the language to provide implementations for the programming assignments.  I'm relatively new to Golang but I'm finding it to be more important as I work with Kubernetes in my day job at GoDaddy.  I'm viewing this course as an opportunity to familiarize myself with the standard set of algorithms that every comp-sci major should know, and to also become familiar with Golang itself.  As such I will attempt to leverage Go's native package system, test system, and other basic features of the language and it's environment that are fundamental to use.
 
@@ -167,4 +193,5 @@ In the real world we need to strive for our code to be both efficient and mainta
 
 I would argue that the difference in performance here falls into the scope of the constant terms that we ignore when we're doing Big Oh notation.  As such, we should care more about the maintainablility of what we write.  Obviously on tiny embedded systems, or super performant code, we might care.  But in the general cases that we really deal with in most of our work we would prefer to be clear over efficient (at this scale).  We see this in the [Zen of Python](https://www.python.org/dev/peps/pep-0020/) and this is no doubt a contributor to that language's widespread success.
 
-It is, perhaps, overly analytical to examine this case and debate this point, but I could easily see a candidate getting a "ding" for using the first solution and not the second.  It's important to understand the code that you're writing, what you're writing it for, and to target solutions to both the problem and the audience.
+It is, perhaps, overly analytical to examine this case and debate this point, but I could easily see a candidate getting a "ding" for using the first solution and not the second.  It's important to understand the code that you're writing, what you're writing it for, and to target solutions to both the problem and the audience.- [coursera-stanford-algorithms-divide-conquer](#coursera-stanford-algorithms-divide-conquer)
+
