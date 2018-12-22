@@ -1,61 +1,48 @@
 package algorithms
 
-import "strconv"
-
-// KragerMinCut implements Krager's randomized algorithm
+// KargerMinCut implements Karger's randomized algorithm
 // for finding the minimum number of cuts in a graph.
-// input should be an adjacency list and the element at
-// position n should represent the node n+1.  So the 10th
-// entry in the array is the 11th numbered vertex
-func KragerMinCut(input [][]string) int {
+// input is a map adjacency list with the key as the node id
+// and the value the list of verticies that make up that node's edges
+func KargerMinCut(input map[string][]string) int {
 	return 0
 }
 
-// ReplaceReference replaces all the references to the node `from`
-// with the node `to` in the input adjacency list
-func ReplaceReference(input [][]string, from string, to string) {
-	fromI, _ := strconv.Atoi(from)
-	// This is the node that we are collapsing
-	// so we need to iterate through it and then
-	// replace all references to it with the node we're
-	// collapsing into
-	nodeToChange := input[fromI-1]
-	for _, v := range nodeToChange {
-		// each edge that the node touches needs to be examined
-		vI, err := strconv.Atoi(v)
-		if err == nil {
-			adjacentNode := input[vI-1]
-			// now iterate through the adjacentNode and replace
-			// the collapsed node with the node we collapse into.
-			for i, w := range adjacentNode {
-				if w == from {
-					adjacentNode[i] = to
-				}
+// UpdateEdges replaces all references to "u" with references to "v"
+func UpdateEdges(input map[string][]string, u string, v string) {
+	collapseFrom := input[u]
+	// iterate through all the edges in the node we are collapsing
+	for _, adjacentVertex := range collapseFrom {
+		adjacentNode := input[adjacentVertex]
+		// now iterate through all the edges of the adjacent node
+		// so we can locate the collapsing vertex (u) and
+		// update them to point to the node we're collapsing into (v)
+		for i, w := range adjacentNode {
+			if w == u {
+				adjacentNode[i] = v
 			}
-
 		}
 	}
 }
 
-// CopyToTarget copies all the verticies from one node's adjacency list
-// to another node's adjacency list but leaves out self loops
-func CopyToTarget(input [][]string, from string, to string) {
-	fromI, _ := strconv.Atoi(from)
-	toI, _ := strconv.Atoi(to)
-	fromNode := input[fromI-1]
-	toNode := input[toI-1]
+// CollapseNode moves all verticies from u -> v, then removes
+// the node at u from the input
+func CollapseNode(input map[string][]string, u string, v string) {
+	fromNode := input[u]
+	toNode := input[v]
 
 	var newNodeList []string
-	for _, v := range toNode {
-		if v != to {
-			newNodeList = append(newNodeList, v)
+	for _, vertex := range toNode {
+		if vertex != v {
+			newNodeList = append(newNodeList, vertex)
 		}
 	}
-	for _, v := range fromNode {
-		if v != to {
-			newNodeList = append(newNodeList, v)
+	for _, vertex := range fromNode {
+		if vertex != v {
+			newNodeList = append(newNodeList, vertex)
 		}
 	}
-	input[toI-1] = newNodeList
-	input[fromI-1] = nil
+
+	input[v] = newNodeList
+	delete(input, u)
 }

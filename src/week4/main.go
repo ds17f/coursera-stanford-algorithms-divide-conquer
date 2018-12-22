@@ -10,8 +10,8 @@ import (
 	"github.com/damiansilbergleithcunniff/algorithms-divide-conquer/src/week4/algorithms"
 )
 
-func readFile(fileName string) [][]string {
-	var fileLines [][]string
+func readFile(fileName string) map[string][]string {
+	var fileLines = make(map[string][]string)
 	file, err := os.Open(fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -21,11 +21,11 @@ func readFile(fileName string) [][]string {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := strings.Fields(scanner.Text())
-		// Remove the first element of the list
-		// since it is the node number
-		// instead we'll track the node number by the position
-		// in the produced array
-		fileLines = append(fileLines, line[1:])
+		// the first element is the node id
+		// and then all remaining are the adjacent nodes
+		// we'll use the node id as the index of the map
+		// and the adjacent list as the value
+		fileLines[line[0]] = line[1:]
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -43,5 +43,5 @@ func main() {
 	}
 
 	fileLines := readFile(os.Args[1])
-	fmt.Println(algorithms.KragerMinCut(fileLines))
+	fmt.Println(algorithms.KargerMinCut(fileLines))
 }
