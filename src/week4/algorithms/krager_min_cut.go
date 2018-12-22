@@ -36,3 +36,26 @@ func ReplaceReference(input [][]string, from string, to string) {
 		}
 	}
 }
+
+// CopyToTarget copies all the verticies from one node's adjacency list
+// to another node's adjacency list but leaves out self loops
+func CopyToTarget(input [][]string, from string, to string) {
+	fromI, _ := strconv.Atoi(from)
+	toI, _ := strconv.Atoi(to)
+	fromNode := input[fromI-1]
+	toNode := input[toI-1]
+
+	var newNodeList []string
+	for _, v := range toNode {
+		if v != to {
+			newNodeList = append(newNodeList, v)
+		}
+	}
+	for _, v := range fromNode {
+		if v != to {
+			newNodeList = append(newNodeList, v)
+		}
+	}
+	input[toI-1] = newNodeList
+	input[fromI-1] = nil
+}
