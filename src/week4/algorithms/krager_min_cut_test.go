@@ -105,3 +105,27 @@ func TestCollapseNode(t *testing.T) {
 		}
 	}
 }
+
+func TestChooseRandomEdge(t *testing.T) {
+	input := map[string][]string{
+		"1": {"2", "3"},
+		"2": {"1", "3", "4"},
+		"3": {"1", "2", "4"},
+		"4": {"2", "3"},
+	}
+	x, y := algorithms.ChooseRandomEdge(input)
+	t.Logf("%v, %v", x, y)
+	//t.Fail()
+}
+
+func TestRunKargerMinCut(t *testing.T) {
+	input := map[string][]string{
+		"1": {"2", "3"},
+		"2": {"1", "3", "4"},
+		"3": {"1", "2", "4"},
+		"4": {"2", "3"},
+	}
+	minCut := algorithms.RunKargerMinCut(input)
+	t.Logf("%v", minCut)
+	//t.Fail()
+}
