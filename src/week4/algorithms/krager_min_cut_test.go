@@ -9,9 +9,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestKragerMinCut(t *testing.T) {
-}
-
 func TestUpdateEdges(t *testing.T) {
 	testCases := []struct {
 		u string
@@ -128,4 +125,15 @@ func TestRunKargerMinCut(t *testing.T) {
 	minCut := algorithms.RunKargerMinCut(input)
 	t.Logf("%v", minCut)
 	//t.Fail()
+}
+
+func TestKargerMinCut(t *testing.T) {
+	input := map[string][]string{
+		"1": {"2", "3"},
+		"2": {"1", "3", "4"},
+		"3": {"1", "2", "4"},
+		"4": {"2", "3"},
+	}
+	minCut := algorithms.KargerMinCut(input)
+	assert.Equal(t, minCut, 2)
 }

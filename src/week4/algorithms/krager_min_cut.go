@@ -1,7 +1,7 @@
 package algorithms
 
 import (
-	"fmt"
+	"math"
 	"math/rand"
 	"time"
 )
@@ -11,7 +11,35 @@ import (
 // input is a map adjacency list with the key as the node id
 // and the value the list of verticies that make up that node's edges
 func KargerMinCut(input map[string][]string) int {
-	return 0
+	n := float64(len(input))
+	iterations := int(math.Ceil((n * n) * math.Ln10 * n))
+	iterations = int(math.Min(n*n, 1000.0))
+	min := 999999
+	for i := 0; i < iterations; i++ {
+		clonedInput := cloneMap(input)
+		result := RunKargerMinCut(clonedInput)
+		if result < min {
+			min = result
+		}
+	}
+	return min
+}
+
+// cloneSlice creates a clone of the slice
+// in a new array and then returns a slice
+// of that new array
+func cloneSlice(slice []string) []string {
+	clone := make([]string, len(slice))
+	copy(clone, slice)
+	return clone
+}
+
+func cloneMap(input map[string][]string) map[string][]string {
+	clone := make(map[string][]string)
+	for k, v := range input {
+		clone[k] = cloneSlice(v)
+	}
+	return clone
 }
 
 // RunKargerMinCut does a single iteration of the Karger
@@ -22,7 +50,6 @@ func RunKargerMinCut(input map[string][]string) int {
 		UpdateEdges(input, u, v)
 		CollapseNode(input, u, v)
 	}
-	fmt.Println(input)
 	for _, val := range input {
 		return len(val)
 	}
